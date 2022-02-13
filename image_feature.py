@@ -11,6 +11,7 @@ class ImageFeature:
         self.likelihood = 100
         self.feature_actually_used = 0
         self.feature_name = ""
+        self.featureType = ""
         self.get_feature_name()
         self.get_likelihood()
 
@@ -21,6 +22,10 @@ class ImageFeature:
         # finds second "/" from BEHIND
         last_underline_index = self.feature_path[:self.feature_path.rfind("/")].rfind("/")
         self.feature_name = self.feature_path[last_underline_index+1:]
+        featureTypeIndex = self.feature_name.rfind("/")
+        self.featureType = self.feature_name[featureTypeIndex+1:]
+        imageTypeDotIndex = self.featureType.rfind(".")
+        self.featureType = self.featureType[0:imageTypeDotIndex]
 
     def get_likelihood(self):
         last_underline_index = self.feature_path.rfind("_")

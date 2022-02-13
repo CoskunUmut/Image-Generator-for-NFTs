@@ -11,6 +11,12 @@ class ImageModule:
         self.currentImageIndex = 0
         self.create_images_path()
         self.maxOccurance = 0
+        self.moduleType = ""
+        self.get_module_type()
+
+    def get_module_type(self):
+        startIndexModuleType = self.module_path.rfind("/")
+        self.moduleType = self.module_path[startIndexModuleType+3:]
 
     def create_images_path(self):
         self.feature_paths = next(walk(self.module_path), (None, None, []))[2]

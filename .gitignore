@@ -1,2 +1,5 @@
 *.xlsx
-*output/
+output_nft/
+output_nft_json/
+
+Bytecode.txt

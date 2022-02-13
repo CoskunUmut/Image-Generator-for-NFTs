@@ -4,12 +4,14 @@ from os import walk
 from image_module import ImageModule
 from PIL import Image
 from excel_creator import ExcelCreator
+from nft_json_creator import NFTjsonCreator
 from nft import NFT
 # from tkinter import Tk     # from tkinter import Tk for Python 3.x
 # from tkinter.filedialog import askopenfilename
 
 # SET YOUR IMAGES PATH ##
 image_modules_path = "C:/Users/Umut/OneDrive/Desktop/NFT/NFT_Dummy_Bilder"
+output_folder = "output_nft"
 # Tk().withdraw()  # we don't want a full GUI, so keep the root window from appearing
 # image_modules_path = askopenfilename()
 
@@ -17,6 +19,7 @@ image_modules_path = "C:/Users/Umut/OneDrive/Desktop/NFT/NFT_Dummy_Bilder"
 class NFT_Generator:
     def __init__(self) -> None:
         self.nftCounter = 0
+        self.nftCreatedCounter = 0
         self.maxNFT = 1
         self.finished = False
         self.image_modules_path = image_modules_path
@@ -30,13 +33,14 @@ class NFT_Generator:
         self.calculate_max_NFT()
         self.generate_NFTs()
         self.createExcel()
+        self.createJson()
 
     def remove_all_files_from_output_folder(self):
         try:
-            shutil.rmtree("output")
+            shutil.rmtree(output_folder)
         except:
             pass
-        os.mkdir("output")
+        os.mkdir(output_folder)
 
     def search_for_modules(self):
         self.modules_dir = next(
@@ -86,11 +90,12 @@ class NFT_Generator:
             self.finished = True
 
     def safe_NFT(self, image, features_path):
-        image.save("output/" + str(self.nftCounter) + ".png")
-        nft = NFT("output/" + str(self.nftCounter) + ".png", features_path)
+        image.save(output_folder+"/" + str(self.nftCreatedCounter) + ".png")
+        nft = NFT(output_folder+"/" + str(self.nftCreatedCounter) + ".png", features_path, self.nftCreatedCounter)
         self.NFTs.append(nft)
+        self.nftCreatedCounter = self.nftCreatedCounter + 1
         self.nftCounter = self.nftCounter + 1
-        # print(f"NFT Number {self.nftCounter} created! KA-CHING!")
+        # print(f"NFT number {self.nftCreatedCounter} created! KA-CHING!")
         self.check_end_condition()
 
     def generate_NFTs(self):
@@ -107,6 +112,9 @@ class NFT_Generator:
 
     def createExcel(self):
         ExcelCreator(self.image_modules, self.maxNFT, self.NFTs)
+
+    def createJson(self):
+        NFTjsonCreator(self.NFTs)
 
 
 nft_generator = NFT_Generator()
