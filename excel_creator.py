@@ -67,8 +67,6 @@ class ExcelCreator:
         merge_format = []
         toggle_format = True
         nftCounter = 0
-        sum_total_probability = 0
-        sum_total_probability_col = 0
         for NFT in self.NFTs:
             worksheet.write(row, 0, NFT.image_path)
             row = row + 1
@@ -89,17 +87,8 @@ class ExcelCreator:
                 total_probability = total_probability * feature_probability
                 worksheet.write(row-1, col, feature_path, merge_format)
                 worksheet.write(row, col, feature_probability, merge_format)
-            sum_total_probability = sum_total_probability + math.exp(total_probability)
             col = col + 1
             worksheet.merge_range(row-1, col, row, col, total_probability, merge_format)
             NFT.rarity = total_probability
-            sum_total_probability_col = col + 1
             row = row + 1
-        row = 1
-        for NFT in self.NFTs:
-            softmax_probability = math.exp(NFT.rarity) / sum_total_probability
-            worksheet.merge_range(row-1,   sum_total_probability_col, row,
-                                  sum_total_probability_col, softmax_probability, merge_format)
-            row = row + 2
-
         workbook.close()
